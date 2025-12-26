@@ -134,12 +134,12 @@ function revealWord() {
         isImpostor ? '❓ IMPOSTORE' : gameState.secretWord.toUpperCase();
     
     document.getElementById('roleMessage').textContent = isImpostor
-        ? '¡Eres el impostor! Intenta descubrir la palabra secreta sin que te descubran.'
-        : 'Memoriza la palabra. Cuando todos la vean, deberán encontrar al impostor.';
+        ? '¡Sos le impostore! Intentá descubrir la palabra secreta sin que te descubran.'
+        : 'Memorizá la palabra. Cuando todxs la vean, deberán encontrar al le impostore.';
     
     const nextBtn = document.getElementById('nextBtn');
     nextBtn.textContent = gameState.currentPlayerIndex < gameState.players.length - 1
-        ? 'Siguiente Jugador →'
+        ? 'Siguiente Jugadore →'
         : 'Ir a Votación →';
     
     gameState.revealedPlayers.add(gameState.currentPlayerIndex);
@@ -213,18 +213,18 @@ const impostorCaught = !isTie && mostVotedPlayers[0] === gameState.impostorIndex
     resultsBox.className = `results-box ${impostorCaught ? 'win' : 'lose'}`;
 
 document.getElementById('winMessage').textContent = isTie
-  ? '⚖️ ¡Empate! El impostor se salvó.'
+  ? '⚖️ ¡Empate! Le impostore se salvó.'
   : impostorCaught
-    ? '✅ ¡Los jugadores ganaron!'
-    : '❌ ¡El impostor ganó!';
+    ? '✅ ¡Les jugadores ganaron!'
+    : '❌ ¡Le impostore ganó!';
 
 
 
     document.getElementById('impostorReveal').textContent = 
-        `El impostor era: ${gameState.players[gameState.impostorIndex]}`;
+        `Le impostor era: ${gameState.players[gameState.impostorIndex]}`;
     document.getElementById('votedPlayer').textContent = isTie
   ? 'Hubo un empate en la votación'
-  : `Más votado: ${gameState.players[mostVotedPlayers[0]]}`;
+  : `Más votadx: ${gameState.players[mostVotedPlayers[0]]}`;
 
     
     document.getElementById('finalWord').textContent = gameState.secretWord.toUpperCase();
