@@ -19,33 +19,61 @@
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100svh; /* clave para mobile */
+        font-family: 'Courier New', monospace;
+        background: #000000;
+        min-height: 100svh;
         padding: 16px;
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.03) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 3px
+          );
+        pointer-events: none;
+        z-index: 1;
       }
 
       .container {
         max-width: 720px;
         width: 100%;
         margin-inline: auto;
-        background: white;
-        border-radius: 18px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25),
-          0 0 0 1px rgba(255, 255, 255, 0.2);
+        background: #0a0a0a;
+        border: 3px solid #ffffff;
+        box-shadow: 
+          0 0 0 1px #000,
+          0 0 30px rgba(255, 255, 255, 0.1),
+          inset 0 0 50px rgba(0, 0, 0, 0.5);
         padding: 20px;
+        position: relative;
+        z-index: 2;
       }
 
       h1 {
         text-align: center;
         font-size: 2.5em;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #ffffff;
         margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 8px;
+        font-weight: 900;
+        text-shadow: 
+          2px 2px 0 #000,
+          4px 4px 10px rgba(255, 255, 255, 0.3);
       }
 
       .screen {
@@ -54,6 +82,12 @@
 
       .screen.active {
         display: block;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
 
       .input-group {
@@ -66,42 +100,52 @@
       input {
         flex: 1;
         padding: 12px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        border: 2px solid #ffffff;
+        background: #000000;
+        color: #ffffff;
         font-size: 16px;
-        transition: border 0.3s;
+        font-family: 'Courier New', monospace;
+        transition: all 0.3s;
       }
 
       input:focus {
         outline: none;
-        border-color: #667eea;
+        background: #1a1a1a;
+        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+
+      input::placeholder {
+        color: #666666;
       }
 
       button {
         padding: 12px 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
+        background: #ffffff;
+        color: #000000;
+        border: 3px solid #ffffff;
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: 'Courier New', monospace;
+        position: relative;
       }
 
-      button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      button:hover:not(:disabled) {
+        background: #000000;
+        color: #ffffff;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
       }
 
       button:disabled {
-        opacity: 0.5;
+        opacity: 0.3;
         cursor: not-allowed;
-        transform: none;
       }
 
-      button:active {
-        transform: scale(0.97);
+      button:active:not(:disabled) {
+        transform: translate(2px, 2px);
       }
 
       .input-group button {
@@ -110,43 +154,76 @@
       }
 
       .players-list {
-        background: #f8f9ff;
-        border-radius: 10px;
+        background: #000000;
+        border: 2px solid #333333;
         padding: 20px;
         margin-bottom: 20px;
+      }
+
+      .players-list h3 {
+        color: #ffffff;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
       }
 
       .player-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: white;
+        background: #0a0a0a;
+        border: 1px solid #444444;
         padding: 12px;
-        border-radius: 8px;
         margin-bottom: 8px;
+      }
+
+      .player-item span {
+        color: #ffffff;
       }
 
       .player-item button {
         width: auto;
-        padding: 8px 14px;
+        padding: 6px 12px;
         font-size: 14px;
-        border-radius: 10px;
         margin-left: auto;
+        background: #000000;
+        color: #ffffff;
+        border: 2px solid #ffffff;
       }
 
-      .player-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+      .player-item button:hover {
+        background: #ffffff;
+        color: #000000;
       }
 
       .word-reveal {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: white;
-        border-radius: 15px;
+        background: #000000;
+        border: 4px solid #ffffff;
+        color: #ffffff;
         padding: 40px;
         text-align: center;
         margin: 30px 0;
+        position: relative;
+        box-shadow: 
+          inset 0 0 30px rgba(255, 255, 255, 0.1),
+          0 0 30px rgba(255, 255, 255, 0.2);
+      }
+
+      .word-reveal::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border: 1px solid #444444;
+        pointer-events: none;
+      }
+
+      .word-reveal p {
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
       }
 
       .word-reveal h2 {
@@ -154,6 +231,9 @@
         margin-top: 10px;
         word-break: break-word;
         overflow-wrap: anywhere;
+        letter-spacing: 8px;
+        font-weight: 900;
+        text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.3);
       }
 
       .vote-grid {
@@ -165,85 +245,138 @@
 
       .vote-button {
         padding: 20px;
-        background: white;
-        border: 2px solid #667eea;
-        color: #333;
-        border-radius: 10px;
+        background: #000000;
+        border: 2px solid #ffffff;
+        color: #ffffff;
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: 'Courier New', monospace;
       }
 
       .vote-button:hover {
-        background: #f0f0ff;
-        border-color: #764ba2;
+        background: #1a1a1a;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+
+      .vote-button.selected {
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
       }
 
       .player-item,
       .vote-item {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
       .results-box {
         border: 4px solid;
-        border-radius: 15px;
         padding: 30px;
         text-align: center;
         margin-bottom: 20px;
+        position: relative;
+      }
+
+      .results-box::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        border: 1px solid;
+        pointer-events: none;
       }
 
       .results-box.win {
-        background: #d1fae5;
-        border-color: #10b981;
+        background: #000000;
+        border-color: #ffffff;
+        color: #ffffff;
+      }
+
+      .results-box.win::before {
+        border-color: #666666;
       }
 
       .results-box.lose {
-        background: #fee2e2;
-        border-color: #ef4444;
+        background: #1a1a1a;
+        border-color: #666666;
+        color: #ffffff;
+      }
+
+      .results-box.lose::before {
+        border-color: #333333;
       }
 
       .results-box h2 {
         font-size: 2em;
         margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+      }
+
+      .results-box p {
+        font-size: 16px;
+        margin: 8px 0;
       }
 
       .vote-results {
-        background: #f8f9ff;
-        border-radius: 10px;
+        background: #000000;
+        border: 2px solid #333333;
         padding: 20px;
         margin: 20px 0;
+      }
+
+      .vote-results h3 {
+        color: #ffffff;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
       }
 
       .vote-item {
         display: flex;
         justify-content: space-between;
-        background: white;
+        background: #0a0a0a;
+        border: 1px solid #444444;
         padding: 10px;
-        border-radius: 8px;
         margin-bottom: 8px;
+        color: #ffffff;
       }
 
       .info-text {
         text-align: center;
-        color: white;
+        color: #cccccc;
         margin-top: 20px;
         font-size: 14px;
+        font-family: 'Courier New', monospace;
       }
 
       .current-player {
         text-align: center;
         margin-bottom: 30px;
+        padding: 20px;
+        border: 2px solid #333333;
+        background: #000000;
       }
 
       .current-player h2 {
         font-size: 2em;
-        color: #333;
+        color: #ffffff;
         margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
       }
 
       .current-player p {
-        color: #666;
+        color: #999999;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 12px;
       }
 
       .full-width-btn {
@@ -258,23 +391,75 @@
         text-align: center;
         padding: 12px;
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.8);
+        color: #666666;
         max-width: 90%;
+        font-family: 'Courier New', monospace;
+        position: relative;
+        z-index: 2;
       }
 
       .footer strong {
         font-weight: 600;
+        color: #ffffff;
       }
 
-      .vote-button.selected {
-  background: #667eea;
-  color: white;
-}
+      details {
+        margin-top: 20px;
+        border: 2px solid #333333;
+        padding: 15px;
+        background: #000000;
+      }
 
+      summary {
+        cursor: pointer;
+        font-weight: bold;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 5px;
+      }
 
-      /* Media Queries para Responsive */
+      summary:hover {
+        color: #cccccc;
+      }
 
-      /* iPhone SE / muy chicos */
+      details div {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #cccccc;
+      }
+
+      details p {
+        margin-bottom: 8px;
+        color: #aaaaaa;
+      }
+
+      #impostorInfo {
+        margin: 10px 0;
+        color: #cccccc;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .vote-instruction {
+        background: #000000;
+        border: 2px solid #ffffff;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .vote-instruction p {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+
+      /* Media Queries */
       @media (max-width: 360px) {
         body {
           padding: 12px;
@@ -282,15 +467,14 @@
 
         .container {
           padding: 16px;
-          border-radius: 14px;
         }
 
         h1 {
           font-size: 1.6em;
+          letter-spacing: 4px;
         }
       }
 
-      /* iPhones estándar / Pro / Plus */
       @media (min-width: 361px) and (max-width: 430px) {
         body {
           padding: 16px;
@@ -298,15 +482,14 @@
 
         .container {
           padding: 20px;
-          border-radius: 16px;
         }
 
         h1 {
           font-size: 1.9em;
+          letter-spacing: 6px;
         }
       }
 
-      /* Tablets */
       @media (min-width: 431px) and (max-width: 768px) {
         body {
           padding: 24px;
@@ -329,7 +512,6 @@
         }
       }
 
-      /* Desktop */
       @media (min-width: 769px) {
         body {
           padding: 40px;
@@ -351,21 +533,18 @@
   </head>
   <body>
     <div class="container">
-      <h1>🕵️ Le Impostore</h1>
+      <h1>🕵️ LE IMPOSTORE</h1>
 
       <!-- Pantalla Lobby -->
       <div id="lobby" class="screen active">
         <div class="input-group">
-          <input type="text" id="playerNameInput" placeholder="Nombre" />
-          <button onclick="addPlayer()">Agregar</button>
+          <input type="text" id="playerNameInput" placeholder="NOMBRE" />
+          <button onclick="addPlayer()">AGREGAR</button>
         </div>
 
         <div class="players-list">
-          <h3>👥 Jugadorxs (<span id="playerCount">0</span>)</h3>
-          <p
-            id="impostorInfo"
-            style="margin: 10px 0; color: #555; font-size: 14px"
-          >
+          <h3>👥 JUGADORXS (<span id="playerCount">0</span>)</h3>
+          <p id="impostorInfo">
             Se jugará con 1 impostore
           </p>
           <div id="playersList"></div>
@@ -377,37 +556,31 @@
           id="startBtn"
           disabled
         >
-          ▶️ Empezar partida
+          ▶ EMPEZAR PARTIDA
         </button>
 
         <button
-  class="full-width-btn"
-  style="background: #e5e7eb; color: #333; margin-top: 10px"
-  onclick="newGroup()"
->
-  🧹 Nuevo grupo
-</button>
+          class="full-width-btn"
+          style="background: #000000; color: #ffffff; border: 2px solid #666666; margin-top: 10px"
+          onclick="newGroup()"
+        >
+          🧹 NUEVO GRUPO
+        </button>
 
-<details style="margin-top: 20px">
-  <summary style="cursor: pointer; font-weight: bold">
-    ℹ️ ¿Cómo se juega?
-  </summary>
+        <details>
+          <summary>ℹ️ ¿CÓMO SE JUEGA?</summary>
 
-  <div style="margin-top: 10px; font-size: 14px; line-height: 1.5">
-    <p>• Agreguen al menos 3 jugadorxs.</p>
-    <p>• Todxs ven la misma palabra, menos le impostore.</p>
-    <p>• A partir de 6 jugadorxs hay 2 impostores.</p>
-    <p>• Pasen el celular de a une y miren sin que nadie más vea.</p>
-    <p>• Una vez que ya vieron todxs la palabra, cada jugadorx debe decir una palabra o frase relacionada con la secreta con el objetivo de identificar quién no la conoce. Le impostore, por su parte, debe fingir que sabe de qué se está hablando a partir de las pistas del resto. La gracia está en no ser demasiado obvix, elegir bien las palabras y complicar el juego sin levantar sospechas.</p>
-    <p>• Hagan todas las rondas que necesiten, cuando la sospecha sea insoportable, discutan y voten, pero tienen que ponerse de acuerdo.</p>
-    <p>•El grupo gana solo si señala EXACTAMENTE a todes les impostores.
-Cualquier otro resultado → ganan les impostores.</p>
-  </div>
-</details>
-
-
-
-
+          <div>
+            <p>• Agreguen al menos 3 jugadorxs.</p>
+            <p>• Todxs ven la misma palabra, menos le impostore.</p>
+            <p>• A partir de 6 jugadorxs hay 2 impostores.</p>
+            <p>• Pasen el celular de a une y miren sin que nadie más vea.</p>
+            <p>• Una vez que ya vieron todxs la palabra, cada jugadorx debe decir una palabra o frase relacionada con la secreta con el objetivo de identificar quién no la conoce.</p>
+            <p>• Le impostore debe fingir que sabe de qué se está hablando.</p>
+            <p>• Hagan todas las rondas que necesiten, cuando la sospecha sea insoportable, discutan y voten.</p>
+            <p>• El grupo gana solo si señala EXACTAMENTE a todes les impostores.</p>
+          </div>
+        </details>
       </div>
 
       <!-- Pantalla Mostrar Palabra -->
@@ -418,22 +591,22 @@ Cualquier otro resultado → ganan les impostores.</p>
         </div>
 
         <div id="beforeReveal">
-          <p style="text-align: center; font-size: 18px; margin-bottom: 20px">
-            Presioná el botón para ver tu palabra (lxs demás no deben mirar)
+          <p style="text-align: center; font-size: 16px; margin-bottom: 20px; color: #cccccc; text-transform: uppercase; letter-spacing: 2px;">
+            Presioná el botón para ver tu palabra<br>(lxs demás no deben mirar)
           </p>
           <button class="full-width-btn" onclick="revealWord()">
-            👁️ Revelar mi palabra
+            👁️ REVELAR MI PALABRA
           </button>
         </div>
 
         <div id="afterReveal" style="display: none">
           <div class="word-reveal">
-            <p>Tu palabra secreta es:</p>
+            <p>TU PALABRA SECRETA ES:</p>
             <h2 id="secretWordDisplay"></h2>
           </div>
           <p
             id="roleMessage"
-            style="text-align: center; margin-bottom: 20px; color: #666"
+            style="text-align: center; margin-bottom: 20px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-size: 14px;"
           ></p>
           <button
             class="full-width-btn"
@@ -450,17 +623,9 @@ Cualquier otro resultado → ganan les impostores.</p>
           <p id="voteProgress"></p>
         </div>
 
-        <div
-          style="
-            background: #e0f2fe;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-          "
-        >
-          <p style="font-size: 18px; font-weight: bold; color: #0369a1">
-            ¿Quién/es creen que es/son le impostore?
+        <div class="vote-instruction">
+          <p id="votingQuestion">
+            ¿QUIÉN/ES CREEN QUE ES/SON LE IMPOSTORE?
           </p>
         </div>
 
@@ -469,39 +634,34 @@ Cualquier otro resultado → ganan les impostores.</p>
 
       <!-- Pantalla Resultados -->
       <div id="results" class="screen">
-        <h2 style="text-align: center; margin-bottom: 20px">Resultados</h2>
+        <h2 style="text-align: center; margin-bottom: 20px; color: #ffffff; text-transform: uppercase; letter-spacing: 4px;">RESULTADOS</h2>
 
         <div id="resultsBox" class="results-box">
           <h2 id="winMessage"></h2>
-          <p id="impostorReveal" style="font-size: 18px"></p>
-          <p id="votedPlayer" style="font-size: 18px"></p>
+          <p id="impostorReveal"></p>
         </div>
 
         <div class="vote-results">
-          <h3 style="margin-bottom: 15px">
-            Palabra secreta: <span id="finalWord"></span>
-          </h3>
-          <h3 style="margin-bottom: 15px">Resultados de votación:</h3>
+          <h3>PALABRA SECRETA: <span id="finalWord"></span></h3>
+          <h3 style="margin-top: 15px;">RESULTADOS DE VOTACIÓN:</h3>
           <div id="finalVotes"></div>
         </div>
 
         <button class="full-width-btn" onclick="resetGame()">
-          🔄 Nueva Partida
+          🔄 NUEVA PARTIDA
         </button>
       </div>
     </div>
 
     <div class="info-text">
-      💡 Tip: Todxs menos le impostore verán la misma palabra. Le impostore debe
-      adivinarla sin ser descubiertx.
+      💡 TIP: TODXS MENOS LE IMPOSTORE VERÁN LA MISMA PALABRA.
     </div>
 
     <script src="game.js"></script>
 
     <footer class="footer">
       <p>
-        Desarrollado por <strong>Noe Abraham</strong> · Proyecto sin fines de
-        lucro · Con amor para mis amigxs 💜
+        DESARROLLADO POR <strong>NOE ABRAHAM</strong> · PROYECTO SIN FINES DE LUCRO · CON AMOR PARA MIS AMIGXS 💜
       </p>
     </footer>
   </body>
