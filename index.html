@@ -348,16 +348,18 @@
       <!-- Pantalla Lobby -->
       <div id="lobby" class="screen active">
         <div class="input-group">
-          <input
-            type="text"
-            id="playerNameInput"
-            placeholder="Nombre"
-          />
+          <input type="text" id="playerNameInput" placeholder="Nombre" />
           <button onclick="addPlayer()">Agregar</button>
         </div>
 
         <div class="players-list">
           <h3>👥 Jugadorxs (<span id="playerCount">0</span>)</h3>
+          <p
+            id="impostorInfo"
+            style="margin: 10px 0; color: #555; font-size: 14px"
+          >
+            Se jugará con 1 impostore
+          </p>
           <div id="playersList"></div>
         </div>
 
