@@ -1,6 +1,6 @@
-// game.js - Lógica del Juego del Impostor
-
+// ======================
 // Estado del juego
+// ======================
 const gameState = {
   players: [],
   secretWord: "",
@@ -9,6 +9,24 @@ const gameState = {
   revealedPlayers: new Set(),
   votes: {},
 };
+
+// ======================
+// Persistencia
+// ======================
+function savePlayers() {
+  localStorage.setItem(
+    "le-impostore-players",
+    JSON.stringify(gameState.players)
+  );
+}
+
+function loadPlayers() {
+  const saved = localStorage.getItem("le-impostore-players");
+  if (saved) {
+    gameState.players = JSON.parse(saved);
+  }
+}
+
 
 // Palabras
 const fallbackWords = [
@@ -309,57 +327,68 @@ function getImpostorCount(playerCount) {
   return playerCount >= 6 ? 2 : 1;
 }
 
-// Funciones de pantalla
+// ======================
+// Pantallas
+// ======================
 function showScreen(screenId) {
-  document.querySelectorAll(".screen").forEach((screen) => {
-    screen.classList.remove("active");
-  });
+  document.querySelectorAll(".screen").forEach((s) =>
+    s.classList.remove("active")
+  );
   document.getElementById(screenId).classList.add("active");
 }
 
-// Funciones del Lobby
+// ======================
+// Lobby
+// ======================
 function addPlayer() {
   const input = document.getElementById("playerNameInput");
   const name = input.value.trim();
 
-  if (name && !gameState.players.includes(name)) {
-    gameState.players.push(name);
-    input.value = "";
-    updatePlayersList();
+  if (!name) return;
+
+  if (gameState.players.includes(name)) {
+    alert("Ese nombre ya está en la lista");
+    return;
   }
+
+  gameState.players.push(name);
+  input.value = "";
+
+  savePlayers();
+  updatePlayersList();
 }
 
 function removePlayer(index) {
   gameState.players.splice(index, 1);
+  savePlayers();
   updatePlayersList();
 }
 
 function updatePlayersList() {
   const list = document.getElementById("playersList");
   const count = document.getElementById("playerCount");
+  const info = document.getElementById("impostorInfo");
+  const startBtn = document.getElementById("startBtn");
 
   count.textContent = gameState.players.length;
 
   if (gameState.players.length === 0) {
     list.innerHTML =
-      '<p style="text-align: center; color: #999; padding: 20px;">No hay jugadorxs aún</p>';
+      '<p style="text-align:center;color:#999;padding:20px;">No hay jugadorxs aún</p>';
   } else {
     list.innerHTML = gameState.players
       .map(
         (player, index) => `
-            <div class="player-item">
-                <span><strong>${player}</strong></span>
-                <button onclick="removePlayer(${index})">❌ Eliminar</button>
-            </div>
-        `
+        <div class="player-item">
+          <span><strong>${player}</strong></span>
+          <button onclick="removePlayer(${index})">❌</button>
+        </div>
+      `
       )
       .join("");
   }
 
-  const startBtn = document.getElementById("startBtn");
   startBtn.disabled = gameState.players.length < 3;
-
-  const info = document.getElementById("impostorInfo");
 
   if (gameState.players.length >= 6) {
     info.textContent = "⚠️ Con 6 o más jugadores hay 2 impostores";
@@ -370,26 +399,24 @@ function updatePlayersList() {
   }
 }
 
-// Funciones del juego
+// ======================
+// Juego
+// ======================
 function startGame() {
   if (gameState.players.length < 3) {
-    alert("Se necesitan al menos 3 jugadorxs para empezar");
+    alert("Se necesitan al menos 3 jugadorxs");
     return;
   }
 
-  // Obtener palabra aleatoria
   gameState.secretWord = getRandomFallbackWord();
 
   const impostorCount = getImpostorCount(gameState.players.length);
 
-  // Mezclamos jugadores
-  const shuffledIndexes = [...gameState.players.keys()].sort(
+  const shuffled = [...gameState.players.keys()].sort(
     () => Math.random() - 0.5
   );
 
-  // Elegimos 1 o 2 impostores
-  gameState.impostorIndexes = shuffledIndexes.slice(0, impostorCount);
-
+  gameState.impostorIndexes = shuffled.slice(0, impostorCount);
   gameState.currentPlayerIndex = 0;
   gameState.revealedPlayers = new Set();
   gameState.votes = {};
@@ -399,13 +426,17 @@ function startGame() {
 }
 
 function updateShowingScreen() {
-  const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+  const name = gameState.players[gameState.currentPlayerIndex];
+
   document.getElementById(
     "currentPlayerName"
-  ).textContent = `Turno de: ${currentPlayer}`;
-  document.getElementById("playerProgress").textContent = `Jugadore ${
-    gameState.currentPlayerIndex + 1
-  } de ${gameState.players.length}`;
+  ).textContent = `Turno de: ${name}`;
+
+  document.getElementById(
+    "playerProgress"
+  ).textContent = `Jugadore ${gameState.currentPlayerIndex + 1} de ${
+    gameState.players.length
+  }`;
 
   document.getElementById("beforeReveal").style.display = "block";
   document.getElementById("afterReveal").style.display = "none";
@@ -424,16 +455,13 @@ function revealWord() {
     : gameState.secretWord.toUpperCase();
 
   document.getElementById("roleMessage").textContent = isImpostor
-    ? "¡Sos le impostore! Intentá descubrir la palabra secreta sin que te descubran."
-    : "Memorizá la palabra. Cuando todxs la vean, deberán encontrar al le impostore.";
+    ? "Sos le impostore. Intentá disimular."
+    : "Memorizá la palabra y encontrá al le impostore.";
 
-  const nextBtn = document.getElementById("nextBtn");
-  nextBtn.textContent =
+  document.getElementById("nextBtn").textContent =
     gameState.currentPlayerIndex < gameState.players.length - 1
-      ? "Siguiente Jugadore →"
-      : "Ir a Votación →";
-
-  gameState.revealedPlayers.add(gameState.currentPlayerIndex);
+      ? "Siguiente →"
+      : "Ir a votación →";
 }
 
 function nextPlayer() {
@@ -447,23 +475,29 @@ function nextPlayer() {
   }
 }
 
-// Funciones de votación
+// ======================
+// Votación
+// ======================
 function updateVotingScreen() {
-  const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+  const name = gameState.players[gameState.currentPlayerIndex];
+
   document.getElementById(
     "votingPlayerName"
-  ).textContent = `Votación: ${currentPlayer}`;
-  document.getElementById("voteProgress").textContent = `Votos ${
-    Object.keys(gameState.votes).length
-  } de ${gameState.players.length}`;
+  ).textContent = `Vota: ${name}`;
+
+  document.getElementById(
+    "voteProgress"
+  ).textContent = `Votos ${Object.keys(gameState.votes).length} de ${
+    gameState.players.length
+  }`;
 
   const voteButtons = document.getElementById("voteButtons");
   voteButtons.innerHTML = gameState.players
     .map(
       (player, index) => `
-        <button class="vote-button" onclick="castVote(${index})">
-            ${player} ${index === gameState.currentPlayerIndex ? "(Tú)" : ""}
-        </button>
+      <button class="vote-button" onclick="castVote(${index})">
+        ${player}${index === gameState.currentPlayerIndex ? " (vos)" : ""}
+      </button>
     `
     )
     .join("");
@@ -480,86 +514,88 @@ function castVote(votedIndex) {
   }
 }
 
-// Funciones de resultados
+// ======================
+// Resultados
+// ======================
 function showResults() {
   const voteCounts = {};
-  Object.values(gameState.votes).forEach((vote) => {
-    voteCounts[vote] = (voteCounts[vote] || 0) + 1;
+
+  Object.values(gameState.votes).forEach((v) => {
+    voteCounts[v] = (voteCounts[v] || 0) + 1;
   });
 
   let maxVotes = 0;
-  let mostVotedPlayers = [];
+  let mostVoted = [];
 
-  Object.entries(voteCounts).forEach(([index, count]) => {
-    const idx = parseInt(index);
-
-    if (count > maxVotes) {
-      maxVotes = count;
-      mostVotedPlayers = [idx];
-    } else if (count === maxVotes) {
-      mostVotedPlayers.push(idx);
+  Object.entries(voteCounts).forEach(([i, c]) => {
+    if (c > maxVotes) {
+      maxVotes = c;
+      mostVoted = [Number(i)];
+    } else if (c === maxVotes) {
+      mostVoted.push(Number(i));
     }
   });
 
-  const isTie = mostVotedPlayers.length > 1;
-  const impostorCaught =
-    !isTie && gameState.impostorIndexes.includes(mostVotedPlayers[0]);
+  const tie = mostVoted.length > 1;
+  const caught =
+    !tie && gameState.impostorIndexes.includes(mostVoted[0]);
 
-  const resultsBox = document.getElementById("resultsBox");
+  document.getElementById("winMessage").textContent = tie
+    ? "⚖️ Empate. Le impostore se salvó."
+    : caught
+    ? "✅ Ganó el grupo"
+    : "❌ Ganó le impostore";
 
-  resultsBox.className = `results-box ${impostorCaught ? "win" : "lose"}`;
-
-  document.getElementById("winMessage").textContent = isTie
-    ? "⚖️ ¡Empate! Le impostore se salvó."
-    : impostorCaught
-    ? "✅ ¡Les jugadores ganaron!"
-    : "❌ ¡Le impostore ganó!";
-
-  const impostorNames = gameState.impostorIndexes
-    .map((i) => gameState.players[i])
-    .join(", ");
-
-  document.getElementById(
-    "impostorReveal"
-  ).textContent = `Les impostores eran: ${impostorNames}`;
-
-  document.getElementById("votedPlayer").textContent = isTie
-    ? "Hubo un empate en la votación"
-    : `Más votadx: ${gameState.players[mostVotedPlayers[0]]}`;
+  document.getElementById("impostorReveal").textContent =
+    "Les impostores eran: " +
+    gameState.impostorIndexes.map((i) => gameState.players[i]).join(", ");
 
   document.getElementById("finalWord").textContent =
     gameState.secretWord.toUpperCase();
 
-  const finalVotes = document.getElementById("finalVotes");
+      const finalVotes = document.getElementById("finalVotes");
+
   finalVotes.innerHTML = gameState.players
     .map(
       (player, index) => `
         <div class="vote-item">
-            <span>${player}</span>
-            <span><strong>${voteCounts[index] || 0} votos</strong></span>
+          <span>${player}</span>
+          <span><strong>${voteCounts[index] || 0} votos</strong></span>
         </div>
-    `
+      `
     )
     .join("");
+
 
   showScreen("results");
 }
 
+// ======================
+// Reset / Nuevo grupo
+// ======================
 function resetGame() {
-  gameState.players = [];
   gameState.secretWord = "";
-  gameState.impostorIndex = -1;
+  gameState.impostorIndexes = [];
   gameState.currentPlayerIndex = 0;
-  gameState.revealedPlayers = new Set();
   gameState.votes = {};
-
-  updatePlayersList();
   showScreen("lobby");
 }
 
-// Event listener para Enter en el input
-document.getElementById("playerNameInput").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    addPlayer();
-  }
-});
+function newGroup() {
+  if (!confirm("¿Borrar el grupo actual?")) return;
+  gameState.players = [];
+  localStorage.removeItem("le-impostore-players");
+  updatePlayersList();
+}
+
+// ======================
+// Init
+// ======================
+loadPlayers();
+updatePlayersList();
+
+document
+  .getElementById("playerNameInput")
+  .addEventListener("keypress", (e) => {
+    if (e.key === "Enter") addPlayer();
+  });
