@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Impostor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 50px;
+            }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 22px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25),
+        0 0 0 1px rgba(255,255,255,0.2);
+            padding: 40px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button:active {
+    transform: scale(0.97);
+}
+
+
+        .players-list {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .player-item button {
+    width: auto;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+
+        .player-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+        .word-reveal {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .word-reveal h2 {
+            font-size: 3em;
+            margin-top: 10px;
+        }
+
+        .vote-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .vote-button {
+            padding: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #333;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .vote-button:hover {
+            background: #f0f0ff;
+            border-color: #764ba2;
+        }
+
+        .player-item,
+        .vote-item {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+
+        .results-box {
+            border: 4px solid;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-box.win {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .results-box.lose {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .results-box h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .vote-results {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .vote-item {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .current-player {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .current-player h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .current-player p {
+            color: #666;
+        }
+
+        .full-width-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer strong {
+    font-weight: 600;
+}
+
+
+       /* Media Queries para Responsive */
+        
+        /* Pantallas muy pequeñas (iPhone SE, etc.) */
+        @media (max-width: 375px) {
+            body {
+                padding: 30px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            input {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .word-reveal {
+                padding: 25px 15px;
+            }
+
+            .word-reveal h2 {
+                font-size: 2em;
+            }
+
+            .vote-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .vote-button {
+                padding: 15px;
+                font-size: 15px;
+            }
+
+            .current-player h2 {
+                font-size: 1.5em;
+            }
+
+            .results-box {
+                padding: 20px;
+            }
+
+            .results-box h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Pantallas pequeñas (iPhone estándar) */
+        @media (min-width: 376px) and (max-width: 640px) {
+            body {
+                padding: 30px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .word-reveal h2 {
+                font-size: 2.5em;
+            }
+
+            .vote-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tablets y pantallas medianas */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .vote-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Pantallas grandes */
+        @media (min-width: 1025px) {
+            .vote-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 375px) {
+    .footer {
+        font-size: 12px;
+        padding: 15px 8px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕵️ Juego del Impostor</h1>
+
+        <!-- Pantalla Lobby -->
+        <div id="lobby" class="screen active">
+            <div class="input-group">
+                <input type="text" id="playerNameInput" placeholder="Nombre del jugador" />
+                <button onclick="addPlayer()">Agregar</button>
+            </div>
+
+            <div class="players-list">
+                <h3>👥 Jugadores (<span id="playerCount">0</span>)</h3>
+                <div id="playersList"></div>
+            </div>
+
+            <button class="full-width-btn" onclick="startGame()" id="startBtn" disabled>
+                ▶️ Iniciar Juego
+            </button>
+        </div>
+
+        <!-- Pantalla Mostrar Palabra -->
+        <div id="showing" class="screen">
+            <div class="current-player">
+                <h2 id="currentPlayerName"></h2>
+                <p id="playerProgress"></p>
+            </div>
+
+            <div id="beforeReveal">
+                <p style="text-align: center; font-size: 18px; margin-bottom: 20px;">
+                    Presiona el botón para ver tu palabra (los demás no deben mirar)
+                </p>
+                <button class="full-width-btn" onclick="revealWord()">
+                    👁️ Revelar mi palabra
+                </button>
+            </div>
+
+            <div id="afterReveal" style="display: none;">
+                <div class="word-reveal">
+                    <p>Tu palabra secreta es:</p>
+                    <h2 id="secretWordDisplay"></h2>
+                </div>
+                <p id="roleMessage" style="text-align: center; margin-bottom: 20px; color: #666;"></p>
+                <button class="full-width-btn" onclick="nextPlayer()" id="nextBtn"></button>
+            </div>
+        </div>
+
+        <!-- Pantalla Votación -->
+        <div id="voting" class="screen">
+            <div class="current-player">
+                <h2 id="votingPlayerName"></h2>
+                <p id="voteProgress"></p>
+            </div>
+
+            <div style="background: #e0f2fe; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 20px;">
+                <p style="font-size: 18px; font-weight: bold; color: #0369a1;">
+                    ¿Quién crees que es el impostor?
+                </p>
+            </div>
+
+            <div class="vote-grid" id="voteButtons"></div>
+        </div>
+
+        <!-- Pantalla Resultados -->
+        <div id="results" class="screen">
+            <h2 style="text-align: center; margin-bottom: 20px;">Resultados</h2>
+            
+            <div id="resultsBox" class="results-box">
+                <h2 id="winMessage"></h2>
+                <p id="impostorReveal" style="font-size: 18px;"></p>
+                <p id="votedPlayer" style="font-size: 18px;"></p>
+            </div>
+
+            <div class="vote-results">
+                <h3 style="margin-bottom: 15px;">Palabra secreta: <span id="finalWord"></span></h3>
+                <h3 style="margin-bottom: 15px;">Resultados de votación:</h3>
+                <div id="finalVotes"></div>
+            </div>
+
+            <button class="full-width-btn" onclick="resetGame()">
+                🔄 Nueva Partida
+            </button>
+        </div>
+    </div>
+
+    <div class="info-text">
+        💡 Tip: Todos menos el impostor verán la misma palabra. El impostor debe adivinarla sin ser descubierto.
+    </div>
+
+    <script src="game.js"></script>
+
+    <footer class="footer">
+    <p>
+        Desarrollado por <strong>Noe Abraham</strong> · 
+        proyecto sin fines de lucro · 
+        con amor para mis amigxs 💜
+    </p>
+</footer>
+
+</body>
+</html>
