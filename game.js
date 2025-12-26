@@ -82,7 +82,7 @@ function updatePlayersList() {
     count.textContent = gameState.players.length;
     
     if (gameState.players.length === 0) {
-        list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No hay jugadores aún</p>';
+        list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No hay jugadorxs aún</p>';
     } else {
         list.innerHTML = gameState.players.map((player, index) => `
             <div class="player-item">
@@ -99,7 +99,7 @@ function updatePlayersList() {
 // Funciones del juego
  function startGame() {
     if (gameState.players.length < 3) {
-        alert('Se necesitan al menos 3 jugadores para empezar');
+        alert('Se necesitan al menos 3 jugadorxs para empezar');
         return;
     }
     
@@ -118,7 +118,7 @@ function updateShowingScreen() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     document.getElementById('currentPlayerName').textContent = `Turno de: ${currentPlayer}`;
     document.getElementById('playerProgress').textContent = 
-        `Jugador ${gameState.currentPlayerIndex + 1} de ${gameState.players.length}`;
+        `Jugadore ${gameState.currentPlayerIndex + 1} de ${gameState.players.length}`;
     
     document.getElementById('beforeReveal').style.display = 'block';
     document.getElementById('afterReveal').style.display = 'none';
@@ -131,7 +131,7 @@ function revealWord() {
     document.getElementById('afterReveal').style.display = 'block';
     
     document.getElementById('secretWordDisplay').textContent = 
-        isImpostor ? '❓ IMPOSTOR' : gameState.secretWord.toUpperCase();
+        isImpostor ? '❓ IMPOSTORE' : gameState.secretWord.toUpperCase();
     
     document.getElementById('roleMessage').textContent = isImpostor
         ? '¡Eres el impostor! Intenta descubrir la palabra secreta sin que te descubran.'
