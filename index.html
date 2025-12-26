@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego del Impostor</title>
     <style>
+
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        html, body {
+    overflow-x: hidden;
+}
+
 
        body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,7 +30,9 @@
 
 
         .container {
+            max-width: 720px;
     width: 100%;
+    margin-inline: auto;
     background: white;
     border-radius: 18px;
     box-shadow:
@@ -51,10 +60,12 @@
         }
 
         .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
 
         input {
             flex: 1;
@@ -95,6 +106,11 @@
 
         button:active {
     transform: scale(0.97);
+}
+
+.input-group button {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 
@@ -303,6 +319,18 @@
         padding: 28px;
     }
 }
+
+@media (max-width: 480px) {
+    .input-group {
+        flex-direction: column;
+    }
+
+    .input-group input,
+    .input-group button {
+        width: 100%;
+    }
+}
+
 
 /* Desktop */
 @media (min-width: 769px) {
