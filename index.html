@@ -319,7 +319,7 @@
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: box-shadow 0.3s;
         text-transform: uppercase;
         letter-spacing: 2px;
         font-family: 'Courier New', monospace;
@@ -331,9 +331,10 @@
       }
 
       .vote-button.selected {
-        background: #ffffff;
-        color: #000000;
-        box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.6) !important;
+        transition: none;
       }
 
       .player-item,
@@ -456,6 +457,24 @@
         padding: 16px;
         font-size: 18px;
         margin-top: 10px;
+      }
+
+      .reset-game-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        margin-top: 15px;
+        background: transparent;
+        color: #666666;
+        border: 1px solid #333333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .reset-game-btn:hover {
+        background: #1a1a1a;
+        color: #999999;
+        border-color: #666666;
       }
 
       .footer {
@@ -684,6 +703,9 @@
           <button class="full-width-btn" onclick="revealWord()">
             👁️ REVELAR MI PALABRA
           </button>
+          <button class="reset-game-btn" onclick="confirmResetGame()">
+            ↩️ ALGUIEN VIO MAL · REINICIAR
+          </button>
         </div>
 
         <div id="afterReveal" style="display: none">
@@ -700,6 +722,9 @@
             onclick="nextPlayer()"
             id="nextBtn"
           ></button>
+          <button class="reset-game-btn" onclick="confirmResetGame()">
+            ↩️ ALGUIEN VIO MAL · REINICIAR
+          </button>
         </div>
       </div>
 
@@ -748,7 +773,7 @@
 
     <footer class="footer">
       <p>
-        DESARROLLADO POR <a href="https://instagram.com/_noe_abraham" target="_blank" rel="noopener noreferrer"><strong>NOE ABRAHAM</strong></a> · PROYECTO SIN FINES DE LUCRO · CON AMOR PARA MIS AMIGXS 💜
+        DESARROLLADO POR <a href="https://instagram.com/tu_usuario_instagram" target="_blank" rel="noopener noreferrer"><strong>NOE ABRAHAM</strong></a> · PROYECTO SIN FINES DE LUCRO · CON AMOR PARA MIS AMIGXS 💜
       </p>
     </footer>
   </body>

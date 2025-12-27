@@ -9,6 +9,8 @@ const gameState = {
   currentPlayerIndex: 0,
   revealedPlayers: new Set(),
   votes: {},
+  impostorPool: [], // 🆕 Pool para shuffle bag
+  impostorHistory: [] // 🆕 Historial de quién fue impostor
 };
 
 // ======================
@@ -328,6 +330,33 @@ function getImpostorCount(playerCount) {
 }
 
 // ======================
+// 🆕 Sistema Shuffle Bag para impostores
+// ======================
+function refillImpostorPool() {
+  // Llenar la bolsa con todos los índices de jugadores
+  gameState.impostorPool = [...gameState.players.keys()];
+  
+  // Shuffle usando Fisher-Yates
+  for (let i = gameState.impostorPool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [gameState.impostorPool[i], gameState.impostorPool[j]] = 
+      [gameState.impostorPool[j], gameState.impostorPool[i]];
+  }
+}
+
+function selectImpostors(count) {
+  // Si no hay suficientes en el pool, rellenar
+  if (gameState.impostorPool.length < count) {
+    refillImpostorPool();
+  }
+  
+  // Sacar los primeros N del pool
+  const selected = gameState.impostorPool.splice(0, count);
+  
+  return selected;
+}
+
+// ======================
 // Pantallas
 // ======================
 function showScreen(screenId) {
@@ -354,12 +383,19 @@ function addPlayer() {
   gameState.players.push(name);
   input.value = "";
 
+  // Resetear el pool cuando cambia la lista de jugadores
+  gameState.impostorPool = [];
+
   savePlayers();
   updatePlayersList();
 }
 
 function removePlayer(index) {
   gameState.players.splice(index, 1);
+  
+  // Resetear el pool cuando cambia la lista de jugadores
+  gameState.impostorPool = [];
+  
   savePlayers();
   updatePlayersList();
 }
@@ -412,11 +448,8 @@ function startGame() {
 
   const impostorCount = getImpostorCount(gameState.players.length);
 
-  const shuffled = [...gameState.players.keys()].sort(
-    () => Math.random() - 0.5
-  );
-
-  gameState.impostorIndexes = shuffled.slice(0, impostorCount);
+  // Usar el sistema Shuffle Bag
+  gameState.impostorIndexes = selectImpostors(impostorCount);
   gameState.currentPlayerIndex = 0;
   gameState.revealedPlayers = new Set();
   gameState.votes = {};
@@ -536,8 +569,13 @@ function handleVoteClick(index) {
 }
 
 function highlightSelectedVotes() {
-  document.querySelectorAll(".vote-button").forEach((btn, i) => {
-    btn.classList.toggle("selected", tempSelectedVotes.includes(i));
+  const buttons = document.querySelectorAll(".vote-button:not(.full-width-btn)");
+  buttons.forEach((btn, i) => {
+    if (tempSelectedVotes.includes(i)) {
+      btn.classList.add("selected");
+    } else {
+      btn.classList.remove("selected");
+    }
   });
 }
 
@@ -603,6 +641,12 @@ function showResults() {
 // ======================
 // Reset / Nuevo grupo
 // ======================
+function confirmResetGame() {
+  if (confirm("¿Alguien vio mal? Esto reiniciará la partida con una nueva palabra y nuevxs impostores.")) {
+    resetGame();
+  }
+}
+
 function resetGame() {
   gameState.secretWord = "";
   gameState.impostorIndexes = [];
@@ -614,6 +658,7 @@ function resetGame() {
 function newGroup() {
   if (!confirm("¿Borrar el grupo actual?")) return;
   gameState.players = [];
+  gameState.impostorPool = [];
   localStorage.removeItem("le-impostore-players");
   updatePlayersList();
 }
